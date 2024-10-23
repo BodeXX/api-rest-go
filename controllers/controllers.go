@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 )
 
@@ -19,7 +20,12 @@ type ConversaoResponse struct {
 }
 
 func Converter(w http.ResponseWriter, r *http.Request) {
-	// Definindo o Content-Type como JSON
+
+	if r.Method != http.MethodPost {
+		http.Error(w, "Método não permitido, use POST", http.StatusMethodNotAllowed)
+		return
+	}
+
 	w.Header().Set("Content-Type", "application/json")
 
 	var req ConversaoRequest
@@ -30,10 +36,18 @@ func Converter(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	fmt.Printf("Valor recebido: %v\n", req.Valor)
+
 	// Atualizando os parâmetros com os dados da requisição
 	moedaOrigem := req.MoedaOrigem
 	moedaDestino := req.MoedaDestino
 	valor := req.Valor
+
+	if valor <= 0 {
+
+		http.Error(w, "Valor invalido, deve ser maior que zero", http.StatusBadRequest)
+		return
+	}
 
 	// Última atualização de taxas dia 24 Set 2024 as 14:00 Horário de Brasília
 	var taxas = map[string]map[string]float64{
@@ -69,6 +83,11 @@ func Converter(w http.ResponseWriter, r *http.Request) {
 		},
 	}
 
+	if _, origenExiste := taxas[moedaOrigem]; !origenExiste {
+		http.Error(w, "Moeda de origem inválida", http.StatusBadRequest)
+		return
+	}
+
 	// Verifica se a taxa de conversão existe
 	if taxaDestino, destinoExiste := taxas[moedaOrigem][moedaDestino]; destinoExiste {
 		valorConvertido := valor * taxaDestino
@@ -84,4 +103,5 @@ func Converter(w http.ResponseWriter, r *http.Request) {
 	} else {
 		http.Error(w, "Moeda de destino inválida", http.StatusBadRequest)
 	}
+
 }

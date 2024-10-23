@@ -8,6 +8,6 @@ import (
 )
 
 func HandleRequest() {
-	http.HandleFunc("/", controllers.Converter)
+	http.HandleFunc("/convert", controllers.Converter)
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
