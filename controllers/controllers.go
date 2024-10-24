@@ -83,7 +83,7 @@ func Converter(w http.ResponseWriter, r *http.Request) {
 		},
 	}
 
-	if _, origenExiste := taxas[moedaOrigem]; !origenExiste {
+	if _, origemExiste := taxas[moedaOrigem]; !origemExiste {
 		http.Error(w, "Moeda de origem inválida", http.StatusBadRequest)
 		return
 	}

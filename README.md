@@ -45,7 +45,8 @@ Usando o Postman
 
 Usando o Terminal com curl: Você também pode testar a API diretamente no terminal usando curl. Execute o seguinte comando:
 
--curl -X POST http://localhost:8080/convert -H "Content-Type: application/json" -d '{"moedaOrigem":"USD","moedaDestino":"BRL","valor":100}'
+- curl -X POST http://localhost:8080/convert -H "Content-Type: application/json" -d '{"moedaOrigem":"USD","moedaDestino":"BRL","valor":100}'
+
 
 ## Endpoints Disponiveis
 
